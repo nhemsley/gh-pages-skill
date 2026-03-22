@@ -39,4 +39,5 @@ TOKEN=$(gh api "/app/installations/$INSTALL_ID/access_tokens" \
     --jq '.token')
 
 echo "Token valid until: $(date -d '+1 hour' '+%H:%M %Z')" >&2
+echo "$TOKEN" | wl-copy
 echo "$TOKEN"

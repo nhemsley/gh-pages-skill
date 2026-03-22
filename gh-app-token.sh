@@ -31,9 +31,12 @@ fi
 
 echo "Installation ID: $INSTALL_ID" >&2
 
-gh api "/app/installations/$INSTALL_ID/access_tokens" \
+TOKEN=$(gh api "/app/installations/$INSTALL_ID/access_tokens" \
     --method POST \
     --header "Authorization: Bearer $JWT" \
     --header "Accept: application/vnd.github+json" \
     --field "repositories[]=$(echo $REPO | cut -d'/' -f2)" \
-    --jq '.token'
+    --jq '.token')
+
+echo "Token valid until: $(date -d '+1 hour' '+%H:%M %Z')" >&2
+echo "$TOKEN"

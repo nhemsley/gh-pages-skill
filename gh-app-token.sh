@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 # gh-app-token.sh
-# Usage: ./gh-app-token.sh <pem_path> <app_id> <owner/repo>
+# Usage: ./gh-app-token.sh <app_id> <owner/repo>
+# Assumes PEM at ~/.config/claude-deploy/private-key.pem
 set -e
 
-PEM_PATH=$1
-APP_ID=$2
-REPO=$3
+PEM_PATH="${CLAUDE_DEPLOY_PEM:-$HOME/.config/claude-deploy/private-key.pem}"
+APP_ID=$1
+REPO=$2
+
+if [[ -z "$APP_ID" || -z "$REPO" ]]; then
+    echo "Usage: gh-app-token <app_id> <owner/repo>" >&2
+    exit 1
+fi
+
+if [[ ! -f "$PEM_PATH" ]]; then
+    echo "Error: PEM not found at $PEM_PATH" >&2
+    echo "Set CLAUDE_DEPLOY_PEM to override path" >&2
+    exit 1
+fi
 
 JWT=$(uvx --with pyjwt --with cryptography python3 - << PYEOF
 import jwt, time
@@ -39,5 +51,4 @@ TOKEN=$(gh api "/app/installations/$INSTALL_ID/access_tokens" \
     --jq '.token')
 
 echo "Token valid until: $(date -d '+1 hour' '+%H:%M %Z')" >&2
-echo "$TOKEN" | wl-copy
 echo "$TOKEN"

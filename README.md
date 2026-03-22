@@ -19,7 +19,7 @@ Paste the token into Claude. Done.
 
 ## Setup
 
-See [GITHUB_APP_SETUP.md](GITHUB_APP_SETUP.md) for one-time GitHub App configuration.
+See [docs/github-app-setup.md](docs/github-app-setup.md) for one-time GitHub App configuration.
 
 ## Using with a GitHub Organization
 
